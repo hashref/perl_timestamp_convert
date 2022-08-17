@@ -1,0 +1,94 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Readonly;
+use File::Basename             qw( basename );
+use Types::Standard            qw();
+use Params::Validate           qw(:all);
+use Getopt::Long               ();
+use DateTime::Format::Strptime ();
+
+our $VERSION = '0.0.1';
+
+Readonly my @TIMEZONES => qw(
+  UTC
+  America/Los_Angeles
+  Asia/Taipei
+  Asia/Hong_Kong
+  Australia/Sydney
+);
+
+Readonly my $NOW                => DateTime->now();
+Readonly my $DATETIME_PARSER    => DateTime::Format::Strptime->new( pattern => '%FT%T' );
+Readonly my $DATETIME_FORMATTER => DateTime::Format::Strptime->new( pattern => '%FT%T %Z' );
+
+Readonly my $VALIDATE_COMMAND_OPTIONS => sub {
+  return validate_with(
+    params => \@_,
+    spec   => {
+      timestamp => {
+        type      => SCALAR | OBJECT,
+        untaint   => 1,
+        callbacks => { 'is_valid_date' => sub { $DATETIME_PARSER->parse_datetime( $_[0] ); } }
+      },
+    },
+    on_fail => sub {
+      my $error_message = $_[0];
+
+      # This is a total hack in lieu of some other solution.
+      # Basically, it removes the class string from the
+      # confess() call so it doesn't confuse the user.
+      $error_message =~ s/to main::__ANON__ //;
+      print "[ERROR] " . $error_message;
+
+      _usage(1);
+    }
+  );
+};
+
+my %COMMAND_LINE_OPTIONS = ( timestamp => $NOW->clone() );
+
+Getopt::Long::GetOptions(
+  'timestamp=s' => \$COMMAND_LINE_OPTIONS{'timestamp'},
+  'help|?'      => sub { _usage() },
+) || _usage(1);
+
+my %ARGS = $VALIDATE_COMMAND_OPTIONS->(%COMMAND_LINE_OPTIONS);
+
+# Coerce User String to Date
+unless ( ref $ARGS{'timestamp'} eq 'DateTime' ) {
+  $ARGS{'timestamp'} = $DATETIME_PARSER->parse_datetime( $ARGS{'timestamp'} );
+}
+
+$ARGS{'timestamp'}->set_time_zone('UTC');
+
+for my $time_zone (@TIMEZONES) {
+  my $dt = $ARGS{'timestamp'}->clone->set_time_zone($time_zone);
+  printf "%-24s | %-20s\n", $DATETIME_FORMATTER->format_datetime($dt), $time_zone;
+}
+
+sub _usage {
+  my $exit_val = shift;
+
+  $exit_val //= 0;
+
+  my $exe_name = basename $0;
+
+  print <<~ "EOF";
+  $exe_name [ --timestamp=<TIMESTAMP> ]
+
+    --timestamp     timestamp in UTC (DEFAULT: Current Timestamp)
+    --help|-h|-?    help documentation
+
+  Converts a UTC timestamp into various other timezones.
+
+    - America/Los_Angeles
+    - Asia/Taipei
+    - Asia/Hong_Kong
+    - Australia/Sydney
+  EOF
+
+  exit $exit_val;
+}
