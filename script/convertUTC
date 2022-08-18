@@ -10,7 +10,7 @@ use Params::Validate           qw(:all);
 use Getopt::Long               ();
 use DateTime::Format::Strptime ();
 
-our $VERSION = '0.0.1';
+our $VERSION = '0.0.2';
 
 Readonly my @TIMEZONES => qw(
   UTC

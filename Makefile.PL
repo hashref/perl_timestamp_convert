@@ -14,7 +14,8 @@ WriteMakefile(
   PREREQ_PM        => {
     'Readonly'                   => '2.05',
     'Params::Validate'           => '1.30',
-    'DateTime::Format::Strptime' => '1.79'
+    'DateTime::Format::Strptime' => '1.79',
+    'Types::Standard'            => '1.016007'
   },
   TEST_REQUIRES => {
     "Test2::V0"    => "0.000060",

@@ -23,9 +23,10 @@ requires:
   DateTime::Format::Strptime: '1.79'
   Params::Validate: '1.30'
   Readonly: '2.05'
+  Types::Standard: '1.016007'
   perl: '5.009001'
 resources:
   bugtracker: https://github.com/hashref/perl_timestamp_convert/issues
   repository: https://github.com/hashref/perl_timestamp_convert.git
-version: v0.0.1
+version: v0.0.2
 x_serialization_backend: 'CPAN::Meta::YAML version 0.018'
