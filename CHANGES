@@ -1,0 +1,11 @@
+Revision history for convertUTC
+
+0.0.3  2022-08-18
+  - Fix MANIFEST file! My Perl packaging game is lacking
+ 
+0.0.2  2022-08-18
+  - Add Types::Standard as a dependancy to fix breaking install
+ 
+0.0.1  2022-08-16
+  - Initial release
+
