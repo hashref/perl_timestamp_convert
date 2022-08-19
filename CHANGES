@@ -1,5 +1,8 @@
 Revision history for convertUTC
 
+0.0.4  2022-08-18
+  - Add --version option
+
 0.0.3  2022-08-18
   - Fix MANIFEST file! My Perl packaging game is lacking
  
