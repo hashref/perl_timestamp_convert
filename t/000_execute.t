@@ -7,7 +7,7 @@ use Test2::V0;
 use Test::Script;
 
 my $SCRIPT_PATH     = './script/convertUTC';
-my $CURRENT_VERSION = "v0.1.0\n";
+my $CURRENT_VERSION = "v0.1.1\n";
 
 plan(7);
 
