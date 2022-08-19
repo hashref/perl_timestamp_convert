@@ -52,6 +52,7 @@ my %COMMAND_LINE_OPTIONS = ( timestamp => $NOW->clone() );
 
 Getopt::Long::GetOptions(
   'timestamp=s' => \$COMMAND_LINE_OPTIONS{'timestamp'},
+  'version'     => sub { _show_version () },
   'help|?'      => sub { _usage() },
 ) || _usage(1);
 
@@ -69,6 +70,11 @@ for my $time_zone (@TIMEZONES) {
   printf "%-24s | %-20s\n", $DATETIME_FORMATTER->format_datetime($dt), $time_zone;
 }
 
+sub _show_version {
+  print 'v' . $VERSION . "\n";
+  exit;
+}
+
 sub _usage {
   my $exit_val = shift;
 
@@ -80,6 +86,7 @@ sub _usage {
   $exe_name [ --timestamp=<TIMESTAMP> ]
 
     --timestamp     timestamp in UTC (DEFAULT: Current Timestamp)
+    --version|-v    display version information
     --help|-h|-?    help documentation
 
   Converts a UTC timestamp into various other timezones.
