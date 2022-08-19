@@ -6,14 +6,17 @@ use warnings;
 use Test2::V0;
 use Test::Script;
 
-my $SCRIPT_PATH = './script/convertUTC';
+my $SCRIPT_PATH     = './script/convertUTC';
+my $CURRENT_VERSION = "v0.0.3\n";
 
-plan(5);
+plan(7);
 
 script_compiles( $SCRIPT_PATH, 'script compiles' );
 
 # Test Command Line Options
 script_runs( [ $SCRIPT_PATH, '-h' ], '-h option works' );
+script_runs( [ $SCRIPT_PATH, '-v' ], '-v option works' );
+script_stdout_is( $CURRENT_VERSION, '-v option returns current version' );
 script_fails( [ $SCRIPT_PATH, '-t' ], { exit => 1 }, '-t fails with no timestamp' );
 script_runs( [ $SCRIPT_PATH, '-t', '2022-01-01T00:00:00' ], '-t option works' );
 
